@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-900">
+    <div class="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center mb-8">Admin Login</h2>
+        <form method="POST">
+            <input type="password" name="password" placeholder="Enter Admin Password" 
+                   class="w-full border rounded-lg px-5 py-4 text-lg" required>
+            <button type="submit" 
+                    class="mt-6 w-full bg-red-700 hover:bg-red-800 text-white py-4 rounded-xl">
+                Login
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

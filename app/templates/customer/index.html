@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% block title %}The OG Furniture - Eldoret{% endblock %}
+
+{% block content %}
+<!-- NAVBAR -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="tail-container px-6 py-5 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-amber-800">The OG Furniture</h1>
+            <p class="text-xs text-gray-500">Langas, Eldoret • Immediate Delivery in Eldoret • Nationwide</p>
+        </div>
+        
+        <div class="hidden md:flex items-center gap-8 text-lg">
+            <a href="/" class="hover:text-amber-700 font-medium">Home</a>
+            <a href="#showroom" class="hover:text-amber-700 font-medium">Showroom</a>
+            <a href="#shop" class="hover:text-amber-700 font-medium">Shop Now</a>
+            <a href="/track" class="hover:text-amber-700 font-medium">Track Order</a>
+        </div>
+
+        <a href="/cart" class="flex items-center gap-2 text-lg font-medium hover:text-amber-700">
+            <i class="fas fa-shopping-cart text-2xl"></i>
+            Cart (<span id="cart-count" class="font-bold">0</span>)
+        </a>
+
+        <button id="mobile-menu-btn" class="md:hidden text-3xl">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <!-- MOBILE DROPDOWN MENU -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t shadow-lg">
+        <div class="flex flex-col px-6 py-4 text-lg">
+            <a href="/" class="py-3 border-b">Home</a>
+            <a href="#showroom" class="py-3 border-b">Showroom</a>
+            <a href="#shop" class="py-3 border-b">Shop Now</a>
+            <a href="/track" class="py-3">Track Order</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="relative h-screen bg-cover bg-center flex items-center" 
+         style="background-image: url('https://images.unsplash.com/photo-1618221195710-dd5b2c8e6c6f')">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="tail-container relative z-10 text-white text-center px-6">
+        <h1 class="text-6xl md:text-7xl font-bold mb-6">The OG Furniture</h1>
+        <p class="text-2xl md:text-3xl mb-10">Premium Handcrafted Furniture</p>
+        <a href="#showroom" class="inline-block bg-amber-700 hover:bg-amber-800 px-14 py-6 rounded-2xl text-2xl font-semibold">
+            Explore Showroom
+        </a>
+    </div>
+</section>
+
+<!-- SHOWROOM -->
+<section id="showroom" class="tail-container px-6 py-20">
+    <h2 class="text-4xl font-bold text-center mb-4">Our Showroom</h2>
+    <p class="text-center text-gray-600 mb-12">Click any category to see examples of what we can produce</p>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div onclick="showCategory('living')" class="cursor-pointer category-card active">
+            <img src="/static/images/living-room/3.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
+            <p class="text-center font-semibold mt-4">Living Room</p>
+        </div>
+        <div onclick="showCategory('bedroom')" class="cursor-pointer category-card">
+            <img src="/static/images/bedroom/1.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
+            <p class="text-center font-semibold mt-4">Bedroom</p>
+        </div>
+        <div onclick="showCategory('dining')" class="cursor-pointer category-card">
+            <img src="/static/images/dining/2.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
+            <p class="text-center font-semibold mt-4">Dining Room</p>
+        </div>
+        <div onclick="showCategory('office')" class="cursor-pointer category-card">
+            <img src="/static/images/office/4.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
+            <p class="text-center font-semibold mt-4">Office Furniture</p>
+        </div>
+    </div>
+
+    <div id="category-content" class="mt-16 min-h-[500px]"></div>
+</section>
+
+<!-- SHOP NOW - With Working Image Slider -->
+<section id="shop" class="bg-gray-50 py-20">
+    <div class="tail-container px-6">
+        <h2 class="text-4xl font-bold text-center mb-12">Available in Store</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for product in products %}
+            <div class="bg-white rounded-3xl shadow overflow-hidden hover:shadow-2xl transition">
+                <!-- Product Image Slider -->
+                <div class="relative h-64 bg-gray-100">
+                    {% if product.images and product.images|length > 0 %}
+                        <div class="product-slider relative h-full overflow-hidden">
+                            {% for image in product.images %}
+                            <img src="{{ image }}" 
+                                 class="product-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                                 style="opacity: {{ '1' if loop.first else '0' }};">
+                            {% endfor %}
+                        </div>
+                        {% if product.images|length > 1 %}
+                        <button onclick="prevProductSlide(this)" 
+                                class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/60 text-white p-2 rounded-full">
+                            ‹
+                        </button>
+                        <button onclick="nextProductSlide(this)" 
+                                class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/60 text-white p-2 rounded-full">
+                            ›
+                        </button>
+                        {% endif %}
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7" class="w-full h-full object-cover">
+                    {% endif %}
+                </div>
+
+                <div class="p-6">
+                    <h3 class="font-semibold text-xl">{{ product.name }}</h3>
+                    <p class="text-amber-700 font-bold text-2xl mt-2">KSh {{ product.price }}</p>
+                    <p class="text-gray-600 text-sm mt-3 line-clamp-3">{{ product.description }}</p>
+                    
+                    <div class="flex gap-3 mt-6">
+                        <input type="number" id="qty-{{ product.id }}" value="1" min="1" class="w-20 border rounded-lg px-4 py-2 text-center">
+                        <button onclick="addToCart({{ product.id }}, '{{ product.name | replace("'", "\\'") }}', {{ product.price }}, '{{ product.images[0] if product.images else "" }}')"
+                                class="flex-1 bg-amber-800 hover:bg-amber-900 text-white py-3.5 rounded-2xl font-medium">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER + Floating WhatsApp (unchanged) -->
+<footer class="bg-gray-900 text-white py-12">
+    <div class="tail-container px-6 text-center">
+        <p class="text-gray-400">The OG Furniture • Langas, Eldoret</p>
+        <p class="text-gray-400 mt-2">Monday - Saturday: 8:00 AM - 6:00 PM</p>
+        <a href="https://wa.me/254795331480" target="_blank" class="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 mt-10 px-10 py-5 rounded-2xl text-lg">
+            <i class="fab fa-whatsapp text-3xl"></i> Chat on WhatsApp
+        </a>
+        <div class="mt-16 pt-8 border-t border-gray-800 text-sm text-gray-500">
+            <p>Developed by <strong>Clain Mursoi</strong> • 0707383703</p>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/254795331480" target="_blank" 
+   class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl text-4xl z-50">
+    <i class="fab fa-whatsapp"></i>
+</a>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/main.js"></script>
+<script>
+// Product Card Slider
+function nextProductSlide(btn) {
+    const slider = btn.parentElement;
+    const images = slider.querySelectorAll('.product-slide');
+    let active = 0;
+    images.forEach((img, i) => { if (parseFloat(img.style.opacity) === 1) active = i; });
+    images[active].style.opacity = '0';
+    const next = (active + 1) % images.length;
+    images[next].style.opacity = '1';
+}
+
+function prevProductSlide(btn) {
+    const slider = btn.parentElement;
+    const images = slider.querySelectorAll('.product-slide');
+    let active = 0;
+    images.forEach((img, i) => { if (parseFloat(img.style.opacity) === 1) active = i; });
+    images[active].style.opacity = '0';
+    const prev = (active - 1 + images.length) % images.length;
+    images[prev].style.opacity = '1';
+}
+
+// Showroom Category (keep your existing function)
+function showCategory(cat) {
+    // ... your existing showCategory code ...
+}
+
+// Mobile Menu
+document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+</script>
+{% endblock %}
