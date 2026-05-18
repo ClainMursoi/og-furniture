@@ -1,10 +1,10 @@
 #!/bin/bash
-echo "=== Starting The OG Furniture ==="
+echo "=== The OG Furniture - Starting ==="
 
 # Run database migration
 echo "Running database migration..."
-flask db upgrade
+python -m flask db upgrade
 
 # Start the app
-echo "Starting the Flask app..."
+echo "Starting the application..."
 python run.py
