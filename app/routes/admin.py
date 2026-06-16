@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, current_app
 from app import db
 from app.models.product import Product
 from app.models.order import Order
 from werkzeug.utils import secure_filename
+from uuid import uuid4
 import os
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -65,12 +66,16 @@ def products():
             image_files = request.files.getlist('images')
             image_urls = []
             
+            upload_folder = current_app.config['UPLOAD_FOLDER']
+            os.makedirs(upload_folder, exist_ok=True)
+
             for image in image_files:
                 if image and image.filename:
                     filename = secure_filename(image.filename)
-                    upload_path = os.path.join('app/static/uploads', filename)
+                    unique_filename = f"{uuid4().hex}_{filename}"
+                    upload_path = os.path.join(upload_folder, unique_filename)
                     image.save(upload_path)
-                    image_urls.append(f'/static/uploads/{filename}')
+                    image_urls.append(url_for('static', filename=f'uploads/{unique_filename}'))
             
             # Limit to maximum 4 images
             image_urls = image_urls[:4]
