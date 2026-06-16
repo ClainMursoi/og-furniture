@@ -46,6 +46,12 @@ function addToCart(id, name, price, image) {
 
 function getCartImageUrl(image) {
     if (!image) return 'https://via.placeholder.com/300x300?text=No+Image';
+    
+    // If it's already a data URI, return as-is
+    if (image.startsWith('data:image/')) {
+        return image;
+    }
+    
     let normalized = image.toString();
 
     try {

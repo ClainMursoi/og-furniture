@@ -2,7 +2,9 @@
 {% block title %}The New Discount Furniture & Upholstery - Eldoret{% endblock %}
 
 {% macro image_src(image) %}
-    {% if image.startswith('http://') or image.startswith('https://') %}
+    {% if image.startswith('data:image/') %}
+        {{ image }}
+    {% elif image.startswith('http://') or image.startswith('https://') %}
         {{ image }}
     {% elif image.startswith('/static/') %}
         {{ image }}

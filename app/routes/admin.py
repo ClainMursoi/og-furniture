@@ -5,6 +5,9 @@ from app.models.order import Order
 from werkzeug.utils import secure_filename
 from uuid import uuid4
 import os
+import base64
+import io
+from PIL import Image
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -66,18 +69,29 @@ def products():
             image_files = request.files.getlist('images')
             image_urls = []
             
-            upload_folder = current_app.config.get('UPLOAD_FOLDER') or os.path.join(current_app.static_folder, 'uploads')
-            if not os.path.isabs(upload_folder):
-                upload_folder = os.path.abspath(upload_folder)
-            os.makedirs(upload_folder, exist_ok=True)
+            # No longer saving to filesystem, all images stored in database
 
             for image in image_files:
                 if image and image.filename:
-                    filename = secure_filename(image.filename)
-                    unique_filename = f"{uuid4().hex}_{filename}"
-                    upload_path = os.path.join(upload_folder, unique_filename)
-                    image.save(upload_path)
-                    image_urls.append(unique_filename)
+                    try:
+                        # Read and validate image
+                        image_data = image.read()
+                        img = Image.open(io.BytesIO(image_data))
+                        img.verify()
+                        
+                        # Reopen after verify
+                        img = Image.open(io.BytesIO(image_data))
+                        # Resize for optimization
+                        img.thumbnail((800, 800), Image.Resampling.LANCZOS)
+                        
+                        # Encode as base64
+                        buffer = io.BytesIO()
+                        img.save(buffer, format='JPEG', quality=85)
+                        base64_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
+                        image_urls.append(f"data:image/jpeg;base64,{base64_image}")
+                    except Exception as e:
+                        flash(f"Error processing image {image.filename}: {str(e)}", "warning")
+                        continue
             
             # Limit to maximum 4 images
             image_urls = image_urls[:4]
