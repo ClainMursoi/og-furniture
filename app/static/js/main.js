@@ -133,14 +133,14 @@ function handleCheckout() {
         const location = document.getElementById('location').value.trim();
 
         if (!name || !phone || !location) {
-            alert("Please fill all fields");
+            showToast("Please fill all fields");
             btn.disabled = false;
             btn.textContent = originalText;
             return;
         }
 
         if (cart.length === 0) {
-            alert("Cart is empty!");
+            showToast("Your cart is empty. Add items before checkout.");
             btn.disabled = false;
             btn.textContent = originalText;
             return;
@@ -187,9 +187,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (document.getElementById('cart-items')) renderCart();
     if (document.getElementById('checkout-form')) {
-        handleCheckout();
-        // Show total
         const totalEl = document.getElementById('total-amount');
         if (totalEl) totalEl.textContent = `KSh ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)}`;
+
+        if (cart.length === 0) {
+            const btn = document.getElementById('submit-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Cart is empty';
+                btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+            }
+            showToast('Your cart is empty. Add items before checkout.');
+        }
+
+        handleCheckout();
     }
 });
