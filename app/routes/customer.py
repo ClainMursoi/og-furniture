@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, jsonify, session, redirec
 from app import db
 from app.models.product import Product
 from app.models.order import Order
+import os
 
 customer_bp = Blueprint('customer', __name__, url_prefix='/')
 
@@ -15,6 +16,25 @@ def index():
 @customer_bp.route('/cart')
 def cart():
     return render_template('customer/cart.html')
+
+
+@customer_bp.route('/test-static')
+def test_static():
+    """Debug endpoint to test static file serving"""
+    from flask import current_app
+    uploads = []
+    upload_folder = current_app.config.get('UPLOAD_FOLDER', '')
+    if os.path.exists(upload_folder):
+        uploads = os.listdir(upload_folder)
+    
+    return jsonify({
+        'static_folder': current_app.static_folder,
+        'static_url_path': current_app.static_url_path,
+        'upload_folder': upload_folder,
+        'uploads_exist': os.path.exists(upload_folder),
+        'files_in_uploads': uploads[:10],
+        'test_url': url_for('static', filename='uploads/test.jpg')
+    })
 
 
 @customer_bp.route('/checkout', methods=['GET', 'POST'])

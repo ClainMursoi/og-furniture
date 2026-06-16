@@ -11,7 +11,9 @@ migrate = Migrate()
 
 def create_app():
     """Create and configure the Flask application"""
-    app = Flask(__name__)
+    # Set static folder to absolute path
+    static_folder = os.path.join(os.path.dirname(__file__), 'static')
+    app = Flask(__name__, static_folder=static_folder, static_url_path='/static')
     app.config.from_object(Config)
 
     # Initialize extensions
@@ -21,6 +23,10 @@ def create_app():
     # Create upload folder if it doesn't exist
     if app.config.get('UPLOAD_FOLDER'):
         os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+        print(f"✅ Upload folder: {app.config['UPLOAD_FOLDER']}")
+    
+    print(f"📁 Static folder: {app.static_folder}")
+    print(f"🔗 Static URL path: {app.static_url_path}")
 
     # Register Blueprints
     from app.routes.customer import customer_bp
