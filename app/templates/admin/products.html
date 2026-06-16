@@ -85,7 +85,8 @@
                 <!-- Product Images -->
                 <div class="h-52 bg-gray-100 relative">
                     {% if product.images and product.images|length > 0 %}
-                        <img src="{{ product.images[0] }}" class="w-full h-full object-cover">
+                        {% set first_image = product.images[0] %}
+                        <img src="{% if first_image.startswith('http://') or first_image.startswith('https://') %}{{ first_image }}{% elif first_image.startswith('/static/') %}{{ first_image }}{% elif first_image.startswith('static/') %}{{ '/' ~ first_image }}{% elif first_image.startswith('uploads/') %}{{ url_for('static', filename=first_image) }}{% else %}{{ url_for('static', filename='uploads/' ~ first_image) }}{% endif %}" class="w-full h-full object-cover">
                         {% if product.images|length > 1 %}
                             <span class="absolute top-3 right-3 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
                                 +{{ product.images|length - 1 }}

@@ -66,7 +66,9 @@ def products():
             image_files = request.files.getlist('images')
             image_urls = []
             
-            upload_folder = current_app.config['UPLOAD_FOLDER']
+            upload_folder = current_app.config.get('UPLOAD_FOLDER') or os.path.join(current_app.static_folder, 'uploads')
+            if not os.path.isabs(upload_folder):
+                upload_folder = os.path.join(current_app.static_folder, upload_folder)
             os.makedirs(upload_folder, exist_ok=True)
 
             for image in image_files:
