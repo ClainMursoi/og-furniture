@@ -1,5 +1,14 @@
 // ==================== GLOBAL CART ====================
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
+try {
+    const stored = localStorage.getItem('cart');
+    cart = stored ? JSON.parse(stored) : [];
+    if (!Array.isArray(cart)) cart = [];
+} catch (error) {
+    console.warn('Invalid cart data in localStorage, resetting cart.', error);
+    cart = [];
+    localStorage.removeItem('cart');
+}
 
 // Update cart count in navbar
 function updateCartCount() {
