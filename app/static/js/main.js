@@ -45,7 +45,7 @@ function addToCart(id, name, price, image) {
 }
 
 function getCartImageUrl(image) {
-    if (!image) return '/static/images/default.png';
+    if (!image) return 'https://via.placeholder.com/300x300?text=No+Image';
     let normalized = image.toString();
 
     try {

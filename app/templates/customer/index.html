@@ -73,7 +73,7 @@
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
         <div onclick="showCategory('living')" data-cat="living" class="cursor-pointer category-card active group">
-            <img src="/static/images/living-room/3.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
+            <img src="/static/images/living-room/3.jpeg" class="w-full h-56 object-cover rounded-3xl shadow" onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=No+Image'">
             <p class="text-center font-semibold mt-4">Living Room</p>
         </div>
         <div onclick="showCategory('bedroom')" data-cat="bedroom" class="cursor-pointer category-card group">
@@ -108,7 +108,8 @@
                             {% for image in product.images %}
                             <img src="{{ image_src(image) }}" 
                                  class="product-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-                                 style="opacity: {{ '1' if loop.first else '0' }};">
+                                 style="opacity: {{ '1' if loop.first else '0' }};"
+                                 onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400?text=No+Image'">
                             {% endfor %}
                         </div>
                         {% if product.images|length > 1 %}
