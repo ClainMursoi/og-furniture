@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}The OG Furniture - Eldoret{% endblock %}
+{% block title %}The New Discount Furniture & Upholstery - Eldoret{% endblock %}
 
 {% block content %}
 <!-- NAVBAR -->
 <nav class="bg-white shadow-md sticky top-0 z-50">
-    <div class="tail-container px-6 py-5 flex justify-between items-center">
-        <div>
-            <h1 class="text-3xl font-bold text-amber-800">The OG Furniture</h1>
-            <p class="text-xs text-gray-500">Langas, Eldoret • Immediate Delivery in Eldoret • Nationwide</p>
+    <div class="tail-container px-4 md:px-6 py-4 md:py-5 flex justify-between items-center gap-4">
+        <div class="flex-1 min-w-0">
+            <h1 class="text-xl md:text-3xl font-bold text-amber-800 leading-tight">The New Discount Furniture & Upholstery</h1>
+            <p class="text-xs md:text-xs text-gray-500 mt-1">Langas, Eldoret • Nationwide Delivery</p>
         </div>
         
         <div class="hidden md:flex items-center gap-8 text-lg">
@@ -17,23 +17,24 @@
             <a href="/track" class="hover:text-amber-700 font-medium">Track Order</a>
         </div>
 
-        <a href="/cart" class="flex items-center gap-2 text-lg font-medium hover:text-amber-700">
-            <i class="fas fa-shopping-cart text-2xl"></i>
-            Cart (<span id="cart-count" class="font-bold">0</span>)
+        <a href="/cart" class="flex items-center gap-2 text-sm md:text-lg font-medium hover:text-amber-700 whitespace-nowrap">
+            <i class="fas fa-shopping-cart text-xl md:text-2xl"></i>
+            <span class="hidden sm:inline">Cart</span>
+            <span class="text-base md:text-lg font-bold text-amber-800 min-w-fit">(<span id="cart-count">0</span>)</span>
         </a>
 
-        <button id="mobile-menu-btn" class="md:hidden text-3xl">
+        <button id="mobile-menu-btn" class="md:hidden text-2xl flex-shrink-0">
             <i class="fas fa-bars"></i>
         </button>
     </div>
 
     <!-- MOBILE DROPDOWN MENU -->
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t shadow-lg">
-        <div class="flex flex-col px-6 py-4 text-lg">
-            <a href="/" class="py-3 border-b">Home</a>
-            <a href="#showroom" class="py-3 border-b">Showroom</a>
-            <a href="#shop" class="py-3 border-b">Shop Now</a>
-            <a href="/track" class="py-3">Track Order</a>
+        <div class="flex flex-col px-6 py-4 text-base md:text-lg">
+            <a href="/" class="py-3 border-b hover:text-amber-700 font-medium">Home</a>
+            <a href="#showroom" class="py-3 border-b hover:text-amber-700 font-medium">Showroom</a>
+            <a href="#shop" class="py-3 border-b hover:text-amber-700 font-medium">Shop Now</a>
+            <a href="/track" class="py-3 hover:text-amber-700 font-medium">Track Order</a>
         </div>
     </div>
 </nav>
@@ -133,7 +134,7 @@
 <!-- FOOTER + Floating WhatsApp (unchanged) -->
 <footer class="bg-gray-900 text-white py-12">
     <div class="tail-container px-6 text-center">
-        <p class="text-gray-400">The OG Furniture • Langas, Eldoret</p>
+        <p class="text-gray-400">The New Discount Furniture & Upholstery • Langas, Eldoret</p>
         <p class="text-gray-400 mt-2">Monday - Saturday: 8:00 AM - 6:00 PM</p>
         <a href="https://wa.me/254795331480" target="_blank" class="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 mt-10 px-10 py-5 rounded-2xl text-lg">
             <i class="fab fa-whatsapp text-3xl"></i> Chat on WhatsApp
