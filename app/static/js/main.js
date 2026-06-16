@@ -39,7 +39,6 @@ function addToCart(id, name, price, image) {
         });
     }
 
-    const normalizedImage = image ? image.toString() : '';
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     showToast(`${quantity} × ${name} added to cart!`);
