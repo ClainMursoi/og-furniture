@@ -39,13 +39,13 @@
 </nav>
 
 <!-- HERO -->
-<section class="relative h-screen bg-cover bg-center flex items-center" 
+<section class="relative h-screen bg-cover bg-center flex items-center overflow-hidden hero-section" 
          style="background-image: url('https://images.unsplash.com/photo-1618221195710-dd5b2c8e6c6f')">
-    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="absolute inset-0 hero-overlay"></div>
     <div class="tail-container relative z-10 text-white text-center px-6">
-        <h1 class="text-6xl md:text-7xl font-bold mb-6">THE NEW DISCOUNT FURNITURE AND UPHOLSTERY</h1>
-        <p class="text-2xl md:text-3xl mb-10">Premium Handcrafted Furniture</p>
-        <a href="#showroom" class="inline-block bg-amber-700 hover:bg-amber-800 px-14 py-6 rounded-2xl text-2xl font-semibold">
+        <h1 class="text-6xl md:text-7xl font-bold mb-6 hero-heading animate-fade-up delay-1">THE NEW DISCOUNT FURNITURE AND UPHOLSTERY</h1>
+        <p class="text-2xl md:text-3xl mb-10 hero-subtitle mx-auto animate-fade-up delay-2">Premium handcrafted pieces designed for comfort, durability and modern living.</p>
+        <a href="#showroom" class="inline-block btn-accent text-white px-14 py-6 rounded-2xl text-2xl font-semibold animate-fade-up delay-3">
             Explore Showroom
         </a>
     </div>
@@ -57,19 +57,19 @@
     <p class="text-center text-gray-600 mb-12">Click any category to see examples of what we can produce</p>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div onclick="showCategory('living')" class="cursor-pointer category-card active">
+        <div onclick="showCategory('living')" data-cat="living" class="cursor-pointer category-card active group">
             <img src="/static/images/living-room/3.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
             <p class="text-center font-semibold mt-4">Living Room</p>
         </div>
-        <div onclick="showCategory('bedroom')" class="cursor-pointer category-card">
+        <div onclick="showCategory('bedroom')" data-cat="bedroom" class="cursor-pointer category-card group">
             <img src="/static/images/bedroom/1.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
             <p class="text-center font-semibold mt-4">Bedroom</p>
         </div>
-        <div onclick="showCategory('dining')" class="cursor-pointer category-card">
+        <div onclick="showCategory('dining')" data-cat="dining" class="cursor-pointer category-card group">
             <img src="/static/images/dining/2.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
             <p class="text-center font-semibold mt-4">Dining Room</p>
         </div>
-        <div onclick="showCategory('office')" class="cursor-pointer category-card">
+        <div onclick="showCategory('office')" data-cat="office" class="cursor-pointer category-card group">
             <img src="/static/images/office/4.jpeg" class="w-full h-56 object-cover rounded-3xl shadow">
             <p class="text-center font-semibold mt-4">Office Furniture</p>
         </div>
@@ -85,7 +85,7 @@
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {% for product in products %}
-            <div class="bg-white rounded-3xl shadow overflow-hidden hover:shadow-2xl transition">
+            <div class="product-card rounded-3xl overflow-hidden">
                 <!-- Product Image Slider -->
                 <div class="relative h-64 bg-gray-100">
                     {% if product.images and product.images|length > 0 %}
@@ -145,7 +145,7 @@
 </footer>
 
 <a href="https://wa.me/254795331480" target="_blank" 
-   class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl text-4xl z-50">
+   class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl text-4xl z-50 floating-whatsapp">
     <i class="fab fa-whatsapp"></i>
 </a>
 {% endblock %}
@@ -174,14 +174,63 @@ function prevProductSlide(btn) {
     images[prev].style.opacity = '1';
 }
 
-// Showroom Category (keep your existing function)
+const categoryData = {
+    living: {
+        title: 'Living Room Inspiration',
+        subtitle: 'Relax in premium comfort',
+        details: 'Our living room range blends modern silhouettes with durable upholstery so your space feels welcoming, refined, and built for everyday life.',
+        images: ['/static/images/living-room/3.jpeg', '/static/images/living-room/2.jpeg', '/static/images/living-room/1.jpeg', '/static/images/living-room/4.jpeg']
+    },
+    bedroom: {
+        title: 'Bedroom Retreats',
+        subtitle: 'Soft, stylish sleep spaces',
+        details: 'Create a peaceful bedroom retreat with custom beds, storage and finishes that match your style, from minimalist elegance to bold comfort.',
+        images: ['/static/images/bedroom/1.jpeg', '/static/images/bedroom/2.jpeg', '/static/images/bedroom/3.jpeg', '/static/images/bedroom/4.jpeg']
+    },
+    dining: {
+        title: 'Dining & Entertaining',
+        subtitle: 'Gather in style',
+        details: 'From dining tables to chairs and benches, our collections are designed to bring family and friends together around a beautiful, functional table.',
+        images: ['/static/images/dining/2.jpeg', '/static/images/dining/1.jpeg', '/static/images/dining/3.jpeg', '/static/images/dining/4.jpeg']
+    },
+    office: {
+        title: 'Home Office Solutions',
+        subtitle: 'Work comfortably and confidently',
+        details: 'Build a productive home office with desks, chairs, shelving, and accessories that keep your workflow flowing and your space organized.',
+        images: ['/static/images/office/4.jpeg', '/static/images/office/1.jpeg', '/static/images/office/2.jpeg', '/static/images/office/3.jpeg']
+    }
+};
+
 function showCategory(cat) {
-    // ... your existing showCategory code ...
+    const cards = document.querySelectorAll('.category-card');
+    cards.forEach(card => card.classList.toggle('active', card.dataset.cat === cat));
+
+    const data = categoryData[cat] || categoryData.living;
+    const categoryContent = document.getElementById('category-content');
+    categoryContent.innerHTML = `
+        <div class="grid gap-8 lg:grid-cols-2 items-center">
+            <div class="space-y-5">
+                <p class="text-amber-700 font-semibold uppercase tracking-[0.26em]">${data.title}</p>
+                <h3 class="text-4xl md:text-5xl font-bold leading-tight">${data.subtitle}</h3>
+                <p class="text-gray-600 leading-8 max-w-xl">${data.details}</p>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+                ${data.images.map(src => `<img src="${src}" class="w-full h-60 object-cover rounded-3xl shadow-lg">`).join('')}
+            </div>
+        </div>
+    `;
 }
 
-// Mobile Menu
-document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
+document.addEventListener('DOMContentLoaded', () => {
+    showCategory('living');
 });
+
+// Mobile Menu
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+}
 </script>
 {% endblock %}
