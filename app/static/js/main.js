@@ -24,6 +24,7 @@ function addToCart(id, name, price, image) {
     const qtyInput = document.getElementById(`qty-${id}`);
     const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
 
+    const normalizedImage = image ? image.toString() : '';
     const existing = cart.find(item => item.id === id);
     
     if (existing) {
@@ -33,14 +34,37 @@ function addToCart(id, name, price, image) {
             id: id,
             name: name,
             price: parseFloat(price),
-            image: image || '',
+            image: normalizedImage,
             quantity: quantity
         });
     }
 
+    const normalizedImage = image ? image.toString() : '';
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     showToast(`${quantity} × ${name} added to cart!`);
+}
+
+function getCartImageUrl(image) {
+    if (!image) return '/static/images/default.png';
+    let normalized = image.toString();
+
+    try {
+        const parsed = new URL(normalized, window.location.href);
+        normalized = parsed.pathname + parsed.search + parsed.hash;
+    } catch (err) {
+        // ignore invalid URL parse and fall back to raw value
+    }
+
+    if (normalized.startsWith('/static/uploads/') || normalized.startsWith('/static/')) {
+        return normalized;
+    }
+    if (normalized.startsWith('http://') || normalized.startsWith('https://')) {
+        return normalized;
+    }
+    const uploadsPrefix = window.STATIC_UPLOADS_PREFIX || '/static/uploads/';
+    const cleaned = normalized.replace(/^uploads\//, '');
+    return `${uploadsPrefix}${cleaned}`;
 }
 
 // ==================== RENDER CART ====================
@@ -67,8 +91,9 @@ function renderCart() {
 
         const div = document.createElement('div');
         div.className = "flex gap-6 bg-white p-6 rounded-2xl shadow-sm";
+        const imageUrl = getCartImageUrl(item.image);
         div.innerHTML = `
-            <img src="${item.image}" class="w-28 h-28 object-cover rounded-xl" alt="${item.name}">
+            <img src="${imageUrl}" class="w-28 h-28 object-cover rounded-xl" alt="${item.name}">
             <div class="flex-1">
                 <h4 class="font-semibold text-lg">${item.name}</h4>
                 <p class="text-amber-700 font-bold">KSh ${item.price}</p>
@@ -193,6 +218,16 @@ function showToast(msg) {
 // ==================== INITIALIZE ====================
 document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
+
+    document.querySelectorAll('.add-to-cart-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const id = parseInt(button.dataset.productId, 10);
+            const name = button.dataset.productName || '';
+            const price = parseFloat(button.dataset.productPrice) || 0;
+            const image = button.dataset.productImage || '';
+            addToCart(id, name, price, image);
+        });
+    });
 
     if (document.getElementById('cart-items')) renderCart();
     if (document.getElementById('checkout-form')) {

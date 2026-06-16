@@ -22,6 +22,9 @@
             theme: { extend: {} }
         }
     </script>
+    <script>
+        window.STATIC_UPLOADS_PREFIX = "{{ url_for('static', filename='uploads/') }}";
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -133,8 +133,12 @@
                     
                     <div class="flex gap-3 mt-6">
                         <input type="number" id="qty-{{ product.id }}" value="1" min="1" class="w-20 border rounded-lg px-4 py-2 text-center">
-                        <button onclick="addToCart({{ product.id }}, '{{ product.name | replace("'", "\\'") }}', {{ product.price }}, '{{ image_src(product.images[0]) if product.images else '' }}')"
-                                class="flex-1 bg-amber-800 hover:bg-amber-900 text-white py-3.5 rounded-2xl font-medium">
+                        <button type="button"
+                                class="add-to-cart-button flex-1 bg-amber-800 hover:bg-amber-900 text-white py-3.5 rounded-2xl font-medium"
+                                data-product-id="{{ product.id }}"
+                                data-product-name="{{ product.name | e }}"
+                                data-product-price="{{ product.price }}"
+                                data-product-image="{{ (product.images[0] if product.images else '') | e }}">
                             Add to Cart
                         </button>
                     </div>
