@@ -11,9 +11,34 @@ body {
     min-height: 100vh;
 }
 
+* {
+    scroll-behavior: smooth;
+}
+
 nav {
     backdrop-filter: blur(16px);
-    background: rgba(255,255,255,0.92);
+    background: rgba(255,255,255,0.96);
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+}
+
+nav a,
+nav button {
+    transition: color 0.25s ease, transform 0.25s ease;
+}
+
+nav a:hover,
+nav button:hover {
+    color: #b45309;
+}
+
+.hero-section {
+    background-blend-mode: multiply;
+    background-color: rgba(15, 23, 42, 0.44);
+    min-height: 92vh;
+}
+
+.hero-overlay {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0.38) 55%, rgba(15, 23, 42, 0.62) 100%);
 }
 
 .hero-section {
@@ -74,7 +99,24 @@ nav {
 
 .category-card img {
     border-radius: 1.75rem;
-    transition: transform 0.35s ease;
+    transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.category-card:hover img {
+    transform: scale(1.04);
+    filter: saturate(1.08);
+}
+
+.product-card {
+    overflow: hidden;
+}
+
+.product-slider {
+    transition: transform 0.4s ease;
+}
+
+.product-slider:hover {
+    transform: translateY(-2px);
 }
 
 .category-card:hover img {

@@ -68,7 +68,7 @@ def products():
             
             upload_folder = current_app.config.get('UPLOAD_FOLDER') or os.path.join(current_app.static_folder, 'uploads')
             if not os.path.isabs(upload_folder):
-                upload_folder = os.path.join(current_app.static_folder, upload_folder)
+                upload_folder = os.path.abspath(upload_folder)
             os.makedirs(upload_folder, exist_ok=True)
 
             for image in image_files:
@@ -77,7 +77,7 @@ def products():
                     unique_filename = f"{uuid4().hex}_{filename}"
                     upload_path = os.path.join(upload_folder, unique_filename)
                     image.save(upload_path)
-                    image_urls.append(url_for('static', filename=f'uploads/{unique_filename}'))
+                    image_urls.append(unique_filename)
             
             # Limit to maximum 4 images
             image_urls = image_urls[:4]
