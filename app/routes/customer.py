@@ -10,9 +10,9 @@ customer_bp = Blueprint('customer', __name__, url_prefix='/')
 @customer_bp.route('/')
 def index():
     products = Product.query.all()
-    categories = sorted({product.category.strip() for product in products if product.category and product.category.strip()})
-    if any(not product.category or not product.category.strip() for product in products):
-        categories.append('Uncategorized')
+    # Extract and normalize categories (trim whitespace)
+    raw_categories = {product.category.strip() for product in products if product.category and product.category.strip()}
+    categories = sorted(raw_categories)
     return render_template('customer/index.html', products=products, categories=categories)
 
 

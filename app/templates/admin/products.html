@@ -49,14 +49,15 @@
                 </div>
 
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium mb-2">Category</label>
-                    <input list="category-suggestions" name="category" placeholder="Select or type category"
+                    <label class="block text-sm font-medium mb-2">Category *</label>
+                    <select name="category" required
                            class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-amber-700">
-                    <datalist id="category-suggestions">
+                        <option value="">-- Select a Category --</option>
                         {% for category in categories %}
-                        <option value="{{ category }}">
+                        <option value="{{ category }}">{{ category }}</option>
                         {% endfor %}
-                    </datalist>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">Select from existing categories. Contact support to add new categories.</p>
                 </div>
 
                 <div class="md:col-span-2">

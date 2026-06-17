@@ -96,11 +96,14 @@ def products():
             # Limit to maximum 4 images
             image_urls = image_urls[:4]
             
+            # Get and normalize category
+            category = request.form.get('category', '').strip()
+            
             product = Product(
                 name=request.form['name'],
                 price=float(request.form['price']),
                 description=request.form['description'],
-                category=request.form.get('category', ''),
+                category=category,
                 images=image_urls,
                 stock=int(request.form.get('stock', 10))
             )
@@ -114,7 +117,9 @@ def products():
             flash(f"Error adding product: {str(e)}", "danger")
     
     products = Product.query.all()
-    categories = sorted({product.category.strip() for product in products if product.category and product.category.strip()})
+    # Extract and normalize categories (trim whitespace)
+    raw_categories = {product.category.strip() for product in products if product.category and product.category.strip()}
+    categories = sorted(raw_categories)
     return render_template('admin/products.html', products=products, categories=categories)
 
 
