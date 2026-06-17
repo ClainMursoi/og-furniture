@@ -8,15 +8,21 @@
     <div id="cart-items" class="space-y-6"></div>
     
     <div class="mt-12 border-t pt-8">
-        <div class="flex justify-between text-2xl font-semibold">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between text-2xl font-semibold">
             <span>Total:</span>
             <span id="cart-total" class="text-amber-800">KSh 0</span>
         </div>
         
-        <a href="/checkout" 
-           class="block mt-8 bg-green-700 hover:bg-green-800 text-white py-4 rounded-xl text-center text-lg font-semibold">
-            Proceed to Checkout
-        </a>
+        <div class="mt-8 grid gap-4 lg:grid-cols-2">
+            <a href="/" 
+               class="block bg-gray-200 hover:bg-gray-300 text-gray-800 py-4 rounded-xl text-center text-lg font-semibold">
+                Return to Home
+            </a>
+            <a href="/checkout" 
+               class="block bg-green-700 hover:bg-green-800 text-white py-4 rounded-xl text-center text-lg font-semibold">
+                Proceed to Checkout
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}

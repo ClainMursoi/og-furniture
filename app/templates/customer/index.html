@@ -98,11 +98,23 @@
 <!-- SHOP NOW - With Working Image Slider -->
 <section id="shop" class="bg-gray-50 py-20">
     <div class="tail-container px-6">
-        <h2 class="text-4xl font-bold text-center mb-12">Available in Store</h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <h2 class="text-4xl font-bold text-center mb-6">Available in Store</h2>
+        <p class="text-center text-gray-600 mb-10">Choose a category to see products for the space you want.</p>
+
+        <div class="flex flex-wrap justify-center gap-3 mb-10">
+            <button type="button" class="category-filter active px-5 py-3 rounded-full border border-amber-800 bg-amber-800 text-white font-medium" data-filter="all">All</button>
+            {% for category in categories %}
+            <button type="button" class="category-filter px-5 py-3 rounded-full border border-gray-300 hover:border-amber-800 hover:text-amber-800" data-filter="{{ category|lower|replace(' ', '-') }}">{{ category }}</button>
+            {% endfor %}
+        </div>
+
+        <div id="no-products-message" class="hidden text-center text-gray-500 text-xl py-20">
+            No products are currently available in this category. Please check another category or return later.
+        </div>
+
+        <div id="shop-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {% for product in products %}
-            <div class="product-card rounded-3xl overflow-hidden">
+            <div class="product-card rounded-3xl overflow-hidden shop-product-card" data-category="{{ (product.category or 'Uncategorized')|lower|replace(' ', '-') }}">
                 <!-- Product Image Slider -->
                 <div class="relative h-64 bg-gray-100">
                     {% if product.images and product.images|length > 0 %}
@@ -253,10 +265,32 @@ function showCategory(cat) {
             </div>
         </div>
     `;
+    filterShopCategory(cat);
+}
+
+function filterShopCategory(filter) {
+    const cards = document.querySelectorAll('.shop-product-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const cardCategory = card.dataset.category;
+        const match = filter === 'all' || cardCategory === filter;
+        card.style.display = match ? '' : 'none';
+        if (match) visibleCount += 1;
+    });
+
+    document.getElementById('no-products-message').classList.toggle('hidden', visibleCount !== 0);
+    document.querySelectorAll('.category-filter').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     showCategory('living');
+    document.querySelectorAll('.category-filter').forEach(btn => {
+        btn.addEventListener('click', () => filterShopCategory(btn.dataset.filter));
+    });
+    filterShopCategory('all');
 });
 
 // Mobile Menu

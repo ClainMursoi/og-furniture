@@ -107,6 +107,16 @@ nav button:hover {
     filter: saturate(1.08);
 }
 
+.category-filter {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.category-filter.active {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
 .product-card {
     overflow: hidden;
 }

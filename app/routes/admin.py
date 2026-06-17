@@ -114,7 +114,8 @@ def products():
             flash(f"Error adding product: {str(e)}", "danger")
     
     products = Product.query.all()
-    return render_template('admin/products.html', products=products)
+    categories = sorted({product.category.strip() for product in products if product.category and product.category.strip()})
+    return render_template('admin/products.html', products=products, categories=categories)
 
 
 @admin_bp.route('/delete_product/<int:product_id>', methods=['POST'])

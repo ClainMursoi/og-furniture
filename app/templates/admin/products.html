@@ -50,8 +50,13 @@
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium mb-2">Category</label>
-                    <input type="text" name="category" placeholder="e.g. Living Room, Bedroom, Office"
+                    <input list="category-suggestions" name="category" placeholder="Select or type category"
                            class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:border-amber-700">
+                    <datalist id="category-suggestions">
+                        {% for category in categories %}
+                        <option value="{{ category }}">
+                        {% endfor %}
+                    </datalist>
                 </div>
 
                 <div class="md:col-span-2">
