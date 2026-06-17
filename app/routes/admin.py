@@ -58,6 +58,20 @@ def orders():
     return render_template('admin/orders.html', orders=orders)
 
 
+# Common furniture categories
+COMMON_CATEGORIES = [
+    'Living Room',
+    'Bedroom',
+    'Dining Room',
+    'Office Furniture',
+    'Kitchen Furniture',
+    'Outdoor Furniture',
+    'Entryway',
+    'Bathroom Furniture',
+    'Storage & Shelving',
+    'Kids Furniture'
+]
+
 @admin_bp.route('/products', methods=['GET', 'POST'])
 def products():
     if not session.get('admin_logged_in'):
@@ -117,10 +131,11 @@ def products():
             flash(f"Error adding product: {str(e)}", "danger")
     
     products = Product.query.all()
-    # Extract and normalize categories (trim whitespace)
+    # Extract and normalize categories from products
     raw_categories = {product.category.strip() for product in products if product.category and product.category.strip()}
-    categories = sorted(raw_categories)
-    return render_template('admin/products.html', products=products, categories=categories)
+    # Combine with common categories and sort
+    all_categories = sorted(set(COMMON_CATEGORIES) | raw_categories)
+    return render_template('admin/products.html', products=products, categories=all_categories)
 
 
 @admin_bp.route('/delete_product/<int:product_id>', methods=['POST'])

@@ -7,13 +7,28 @@ import os
 customer_bp = Blueprint('customer', __name__, url_prefix='/')
 
 
+# Common furniture categories
+COMMON_CATEGORIES = [
+    'Living Room',
+    'Bedroom',
+    'Dining Room',
+    'Office Furniture',
+    'Kitchen Furniture',
+    'Outdoor Furniture',
+    'Entryway',
+    'Bathroom Furniture',
+    'Storage & Shelving',
+    'Kids Furniture'
+]
+
 @customer_bp.route('/')
 def index():
     products = Product.query.all()
-    # Extract and normalize categories (trim whitespace)
+    # Extract and normalize categories from products
     raw_categories = {product.category.strip() for product in products if product.category and product.category.strip()}
-    categories = sorted(raw_categories)
-    return render_template('customer/index.html', products=products, categories=categories)
+    # Combine with common categories and sort
+    all_categories = sorted(set(COMMON_CATEGORIES) | raw_categories)
+    return render_template('customer/index.html', products=products, categories=all_categories)
 
 
 @customer_bp.route('/cart')
