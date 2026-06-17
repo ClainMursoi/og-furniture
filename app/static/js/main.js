@@ -199,7 +199,7 @@ function handleCheckout() {
                 localStorage.removeItem('cart');
                 window.location.href = `/order_success?order_number=${data.order_number}`;
             } else {
-                alert("Failed to place order");
+                showToast(data.error || "Failed to place order.");
             }
         } catch (err) {
             console.error(err);
@@ -230,6 +230,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = button.dataset.productName || '';
             const price = parseFloat(button.dataset.productPrice) || 0;
             const image = button.dataset.productImage || '';
+            const stock = parseInt(button.dataset.productStock, 10) || 0;
+            const qtyInput = document.getElementById(`qty-${id}`);
+            const quantity = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
+
+            if (stock <= 0) {
+                showToast('This product is out of stock.');
+                return;
+            }
+            const existing = cart.find(item => item.id === id);
+            const existingQty = existing ? existing.quantity : 0;
+            if (existingQty + quantity > stock) {
+                showToast(`Only ${stock} item(s) available in stock.`);
+                if (qtyInput) qtyInput.value = Math.max(1, stock - existingQty);
+                return;
+            }
+
             addToCart(id, name, price, image);
         });
     });

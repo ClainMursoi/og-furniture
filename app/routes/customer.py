@@ -42,23 +42,47 @@ def checkout():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            
+            items = data.get('items', [])
+            if not isinstance(items, list) or len(items) == 0:
+                raise ValueError('Cart is empty or invalid.')
+
+            requested_quantities = {}
+            for item in items:
+                item_id = int(item.get('id', 0))
+                quantity = int(item.get('quantity', 1))
+                if item_id <= 0 or quantity < 1:
+                    raise ValueError('Invalid cart item.')
+                requested_quantities[item_id] = requested_quantities.get(item_id, 0) + quantity
+
+            products = Product.query.filter(Product.id.in_(requested_quantities.keys())).all()
+            if len(products) != len(requested_quantities):
+                raise ValueError('One or more products are no longer available.')
+
+            for product in products:
+                requested = requested_quantities.get(product.id, 0)
+                if requested > product.stock:
+                    raise ValueError(f'Only {product.stock} item(s) of "{product.name}" are available.')
+
+            # Deduct stock and save the order
+            for product in products:
+                product.stock -= requested_quantities[product.id]
+
             order = Order(
                 customer_name=data['name'],
                 phone=data['phone'],
                 location=data['location'],
-                items=data['items'],
-                total_amount=data['total']
+                items=items,
+                total_amount=float(data['total'])
             )
-            
+
             db.session.add(order)
             db.session.commit()
-            
+
             return jsonify({
                 "success": True,
                 "order_number": order.order_number
             })
-            
+
         except Exception as e:
             db.session.rollback()
             return jsonify({
